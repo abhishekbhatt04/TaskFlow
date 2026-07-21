@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import { useAuth } from "./security/AuthContext"
+import { useLocation } from "react-router-dom";
 export default function HeaderComponent(){
     // const authContext= useContext(AuthContext) using its easier version below
     
@@ -7,6 +8,15 @@ export default function HeaderComponent(){
     const isAuthenticated=authContext.isAuthenticated
     const logout = authContext.logout;  
     // console.log(authContext) 
+     const location = useLocation();
+
+    const hideHeader =
+        location.pathname === "/" ||
+        location.pathname === "/login";
+
+    if(hideHeader){
+        return null;
+    }
    
     return(
               <header className="border-bottom border-light border-5 mb-5 p-2">

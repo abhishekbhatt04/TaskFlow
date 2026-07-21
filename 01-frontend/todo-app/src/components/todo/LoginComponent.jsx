@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./LoginComponent.css"
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./security/AuthContext";
 export default function LoginComponent() {
@@ -49,41 +50,76 @@ export default function LoginComponent() {
   //     return null
   // }
 
-  return (
-    <div className="Login">
-        <h1>Lets start with your login!</h1>
-      <div className="LoginForm">
-        <div>
-          <label>Username</label>
-          <input
-            type="text"
-            name="username"
-            value={username}
-            onChange={handleUsernameChange}
-          ></input>
-        </div>
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            value={password}
-            onChange={handlePasswordChange}
-          ></input>
-        </div>
-        <div>
-          <button type="button" name="login" onClick={handleButton}>
-            Login
-          </button>
+ return (
+  <div className="container-fluid login-page">
+    <div className="row min-vh-100">
+
+      {/* Left Side */}
+      <div className="col-lg-5 d-none d-lg-flex login-left">
+        <div className="login-left-content">
+          <h2 className="fw-bold text-white">TaskFlow</h2>
+
+          <h1 className="text-white mt-5">Welcome Back!</h1>
+
+         <p className="text-white mt-3 fs-5">
+           Organize your work.
+         Track your goals.
+        Finish what matters.
+         </p>
         </div>
       </div>
 
-      {/* <ErrorMsgComponenet/> 
-      <SuccessMsgComponenet/> */}
+      {/* Right Side */}
+      <div className="col-lg-7 d-flex align-items-center justify-content-center">
 
-      {/* Easier way insteda of using components */}
-     
-      {showError && <div className="errorMsg">Authentication Failed</div>}
+        <div className="login-card">
+
+          <h2 className="fw-bold mb-2">Login to your account</h2>
+
+          <p className="text-muted mb-4">
+            Enter your credentials to access your account
+          </p>
+
+          <div className="mb-3">
+            <label className="form-label">Username</label>
+
+            <input
+              type="text"
+              className="form-control"
+              value={username}
+              onChange={handleUsernameChange}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Password</label>
+
+            <input
+              type="password"
+              className="form-control"
+              value={password}
+              onChange={handlePasswordChange}
+            />
+          </div>
+
+          <button
+            className="btn btn-primary w-100"
+            onClick={handleButton}
+          >
+            Login
+          </button>
+
+          {showError && (
+            <div className="alert alert-danger mt-3">
+              Authentication Failed
+            </div>
+          )}
+
+        </div>
+
+      </div>
+
     </div>
-  );
+  </div>
+);
 }
