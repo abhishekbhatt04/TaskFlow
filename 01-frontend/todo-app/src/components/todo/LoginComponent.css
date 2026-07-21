@@ -50,3 +50,21 @@
     font-size:18px;
     padding:12px;
 }
+.forgot-link{
+    color:#6C63FF;
+    font-weight:500;
+    transition:.3s;
+}
+
+.forgot-link:hover{
+    color:#5848e5;
+}
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-check-input {
+    margin-top: 0;
+}

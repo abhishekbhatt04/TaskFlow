@@ -1,0 +1,47 @@
+.taskflow-header{
+    background:#ffffff;
+    box-shadow:0 2px 15px rgba(0,0,0,.08);
+    margin-bottom:30px;
+}
+
+.taskflow-navbar{
+    min-height:80px;
+}
+
+.taskflow-logo{
+    font-size:1.8rem;
+    font-weight:700;
+    color:#6C63FF !important;
+    text-decoration:none;
+}
+
+.taskflow-link{
+    color:#444 !important;
+    font-size:1.1rem;
+    font-weight:500;
+    margin:0 22px;
+    transition:.3s;
+}
+
+.taskflow-link:hover{
+    color:#6C63FF !important;
+}
+
+.logout-btn{
+    display:inline-block;
+    background:#6C63FF;
+    color:white;
+    text-decoration:none;
+
+    padding:10px 22px;
+    border-radius:30px;
+
+    font-weight:600;
+    transition:.3s;
+}
+
+.logout-btn:hover{
+    background:#5848e5;
+    color:white;
+    text-decoration:none;
+}

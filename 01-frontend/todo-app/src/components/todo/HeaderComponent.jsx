@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import { useAuth } from "./security/AuthContext"
 import { useLocation } from "react-router-dom";
+import './HeaderComponent.css'
 export default function HeaderComponent(){
     // const authContext= useContext(AuthContext) using its easier version below
     
@@ -19,30 +20,92 @@ export default function HeaderComponent(){
     }
    
     return(
-              <header className="border-bottom border-light border-5 mb-5 p-2">
+              <header className="taskflow-header">
             <div className="container">
                 <div className="row">
-                    <nav className="navbar navbar-expand-lg">
-                        <a className="navbar-brand ms-2 fs-2 fw-bold text-black" href="https://www.in28minutes.com">in28minutes</a>
-                        <div className="collapse navbar-collapse">
-                            <ul className="navbar-nav">
-                                <li className="nav-item fs-5">
-                                    {isAuthenticated&&<Link className="nav-link" to="/welcome/in28minutes">Home</Link>}
-                                </li>
-                                <li className="nav-item fs-5">
-                                    {isAuthenticated&&<Link className="nav-link" to="/todos">Todos</Link>}
-                                </li>
-                            </ul>
-                        </div>
-                        <ul className="navbar-nav">
-                            <li className="nav-item fs-5">
-                                {!isAuthenticated&&<Link className="nav-link" to="/login">Login</Link>}
-                            </li>
-                            <li className="nav-item fs-5">
-                                {isAuthenticated&&<Link className="nav-link" to="/logout" onClick={logout}>Logout</Link>}
-                            </li>
-                        </ul>
-                    </nav>
+                  <nav className="navbar navbar-expand-lg taskflow-navbar">
+
+    <div className="container-fluid">
+
+        <Link
+            className="navbar-brand taskflow-logo"
+            to="/welcome/in28minutes"
+        >
+            🚀 TaskFlow
+        </Link>
+
+        <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+        >
+            <span className="navbar-toggler-icon"></span>
+        </button>
+
+        <div
+            className="collapse navbar-collapse"
+            id="navbarNav"
+        >
+
+            <ul className="navbar-nav mx-auto">
+
+                {isAuthenticated && (
+                    <li className="nav-item">
+                        <Link
+                            className="nav-link taskflow-link"
+                            to="/welcome/in28minutes"
+                        >
+                            Dashboard
+                        </Link>
+                    </li>
+                )}
+
+                {isAuthenticated && (
+                    <li className="nav-item">
+                        <Link
+                            className="nav-link taskflow-link"
+                            to="/todos"
+                        >
+                            My Tasks
+                        </Link>
+                    </li>
+                )}
+
+            </ul>
+
+            <ul className="navbar-nav">
+
+                {!isAuthenticated && (
+                    <li className="nav-item">
+                        <Link
+                            className="nav-link taskflow-link"
+                            to="/login"
+                        >
+                            Login
+                        </Link>
+                    </li>
+                )}
+
+                {isAuthenticated && (
+                    <li className="nav-item">
+                        <Link
+                            className="logout-btn"
+                            to="/logout"
+                            onClick={logout}
+                        >
+                            Logout
+                        </Link>
+                    </li>
+                )}
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>
                 </div>
             </div>
         </header>
