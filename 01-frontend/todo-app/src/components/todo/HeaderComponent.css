@@ -9,10 +9,20 @@
 }
 
 .taskflow-logo{
-    font-size:1.8rem;
-    font-weight:700;
-    color:#6C63FF !important;
-    text-decoration:none;
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #000 !important;
+    text-decoration: none;
+    line-height: 1;
+}
+
+.taskflow-logo svg{
+    font-size: 1.7rem;
+    color: #6C63FF;
+    flex-shrink: 0;
 }
 
 .taskflow-link{

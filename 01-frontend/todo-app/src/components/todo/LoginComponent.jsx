@@ -3,6 +3,8 @@ import "./LoginComponent.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./security/AuthContext";
 import { FaUser, FaLock } from "react-icons/fa";
+import taskAmico from "./assests/Task-amico.svg";
+import { FaClipboardCheck } from "react-icons/fa";
 export default function LoginComponent() {
   <h1>Lets start with your login!</h1>;
   const [username, setUsername] = useState("in28minutes");
@@ -57,13 +59,22 @@ export default function LoginComponent() {
         {/* Left Side */}
         <div className="col-lg-5 d-none d-lg-flex login-left">
           <div className="login-left-content">
-            <h2 className="fw-bold text-white">TaskFlow</h2>
+            <div className="login-logo">
+              <FaClipboardCheck className="logo-icon" />
+              <span>TaskFlow</span>
+            </div>
 
-            <h1 className="text-white mt-5">Welcome Back!</h1>
+            <h1 className="text-white mt-4">Welcome Back!</h1>
 
             <p className="text-white mt-3 fs-5">
               Organize your work. Track your goals. Finish what matters.
             </p>
+
+            <img
+              src={taskAmico}
+              alt="Task Management"
+              className="login-illustration"
+            />
           </div>
         </div>
 
