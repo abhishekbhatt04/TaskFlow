@@ -194,14 +194,11 @@
     margin-bottom:25px;
 }
 
-.chart-placeholder{
-    height:250px;
+.chart-container{
     display:flex;
-    flex-direction:column;
     justify-content:center;
     align-items:center;
-    color:#999;
-    gap:15px;
+    min-height:280px;
 }
 
 .chart-placeholder p{

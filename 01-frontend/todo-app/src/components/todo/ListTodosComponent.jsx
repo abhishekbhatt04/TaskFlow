@@ -1,95 +1,139 @@
-import { useEffect, useState } from "react"
-import { deleteTodoApi, retrieveTodosForUser } from "./api/TodosApiService"
-import { useAuth } from "./security/AuthContext"
-import { useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react";
+import { deleteTodoApi, retrieveTodosForUser } from "./api/TodosApiService";
+import { useAuth } from "./security/AuthContext";
+import { useNavigate } from "react-router-dom";
+import "./ListTodosComponent.css";
 
-export default function ListTodosComponent(){
+export default function ListTodosComponent() {
+  // const today =new Date()
+  // const targetdate=new Date(today.getFullYear()+10,today.getMonth(),today.getDate())
+  const [todos, setTodos] = useState([]);
+  const [message, setMessage] = useState(null);
+  const authContext = useAuth();
+  const username = authContext.username;
+  const navigate = useNavigate();
 
-    // const today =new Date()
-    // const targetdate=new Date(today.getFullYear()+10,today.getMonth(),today.getDate())
-    const[todos,setTodos]=useState([])
-    const[message,setMessage]=useState(null)
-    const authContext=useAuth()
-    const username=authContext.username
-    const navigate=useNavigate()
+  // const todos=[
+  //         //    {id:1,description:'Learn AWS' ,done:false,targetdate:targetdate},
+  //         //     {id:2,description:'Learn Full Stack',done:false,targetdate:targetdate},
+  //         //     {id:3,description:'Learn React',done:false,targetdate:targetdate}
+  // ]
 
-        // const todos=[
-        //         //    {id:1,description:'Learn AWS' ,done:false,targetdate:targetdate},
-        //         //     {id:2,description:'Learn Full Stack',done:false,targetdate:targetdate},
-        //         //     {id:3,description:'Learn React',done:false,targetdate:targetdate}
-        // ]
+  useEffect(() => {
+    refreshTodos();
+  }, []);
 
-        useEffect(
-            ()=>{
-                refreshTodos() 
-            },[]     
-        )
-        
-        function refreshTodos(){
-            retrieveTodosForUser(username)
-            .then(response=>
-                {
-                    console.log(response.data)
-                    setTodos(response.data)
-                }
-                )
-            .catch(error=>console.log(error))
-        }
-    
-        function deleteTodo(id){
-            console.log("clicked"+id)
-            deleteTodoApi(username,id)
-            .then(
-                ()=> {
-                    setMessage(`delete of todo with id= ${id} is successful`)
-                    refreshTodos()
-                }
-              
-            )
-        }
-          function updateTodo(id){
-            console.log("clicked"+id)
-            navigate(`/todo/${id}`)
-        }
-        
-        function addNewTodo(){
-            navigate('/todo/-1')
-        }
+  function refreshTodos() {
+    retrieveTodosForUser(username)
+      .then((response) => {
+        console.log(response.data);
+        setTodos(response.data);
+      })
+      .catch((error) => console.log(error));
+  }
 
-    return(
-        <div className="container">
-        <h1>Thing you want to do!</h1>
-        {message &&<div className="alert alert-warning">{message}</div>}
+  function deleteTodo(id) {
+    console.log("clicked" + id);
+    deleteTodoApi(username, id).then(() => {
+      setMessage(`delete of todo with id= ${id} is successful`);
+      refreshTodos();
+    });
+  }
+  function updateTodo(id) {
+    console.log("clicked" + id);
+    navigate(`/todo/${id}`);
+  }
+
+  function addNewTodo() {
+    navigate("/todo/-1");
+  }
+
+  return (
+    <div className="tasks-page">
+      <div className="tasks-header">
         <div>
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th>description</th>
-                        <th>is done?</th>
-                        <th>targetdate</th>
-                        <th>Delete</th>
-                        <th>Update</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {todos.map(
-                        todo=>(
-                        <tr key={todo.id}>
-                        <td>{todo.description}</td>
-                        <td>{todo.done.toString()}</td>
-                        {/* <td>{todo.targetdate.toDateString()}</td> */}
-                        <td>{todo.targetDate.toString()}</td>
-                        <td ><button className="btn btn-warning" onClick={()=>deleteTodo(todo.id)}>Delete</button></td>
-                        <td><button className="btn btn-success" onClick={()=>updateTodo(todo.id)}>Update</button></td>
-                    </tr>
-                        )
-                    )
-                    }
-                     
-                </tbody>
-            </table>
-            <div className="btn btn-success m-5" onClick={addNewTodo}>Add New Todo</div>
+          <h1>My Tasks</h1>
+          <p>Manage all your tasks in one place.</p>
         </div>
-        </div>
-    )
+      </div>
+
+      {message && <div className="alert alert-success">{message}</div>}
+
+      <div className="task-toolbar">
+        <input
+          className="search-input"
+          type="text"
+          placeholder="🔍 Search tasks..."
+        />
+
+        <select className="toolbar-select">
+          <option>All Status</option>
+          <option>Pending</option>
+          <option>Completed</option>
+        </select>
+
+        <select className="toolbar-select">
+          <option>Sort by: Target Date</option>
+          <option>Task Name</option>
+          <option>Status</option>
+        </select>
+
+        <button className="add-task-btn" onClick={addNewTodo}>
+          + Add New Task
+        </button>
+      </div>
+
+      <div className="table-card">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Task</th>
+              <th>Status</th>
+              <th>Due Date</th>
+              <th>Delete</th>
+              <th>Edit</th>
+            </tr>
+          </thead>
+          <tbody>
+            {todos.map((todo) => (
+              <tr key={todo.id}>
+                <td>{todo.description}</td>
+                <td>
+                  {todo.done ? (
+                    <span className="status completed">Completed</span>
+                  ) : (
+                    <span className="status pending">Pending</span>
+                  )}
+                </td>
+                {/* <td>{todo.targetdate.toDateString()}</td> */}
+                <td>
+                  {new Date(todo.targetDate).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </td>
+                <td>
+                  <button
+                    className="btn btn-warning"
+                    onClick={() => deleteTodo(todo.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+                <td>
+                  <button
+                    className="btn btn-success"
+                    onClick={() => updateTodo(todo.id)}
+                  >
+                    Update
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
 }
