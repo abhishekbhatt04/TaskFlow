@@ -77,3 +77,145 @@
 .progress-icon{
     color:#3B82F6;
 }
+
+.dashboard-bottom{
+    display:grid;
+    grid-template-columns:1.45fr 1fr;
+    gap:30px;
+    margin-top:50px;
+}
+
+.upcoming-card{
+    background:#fff;
+    border-radius:18px;
+    padding:24px 28px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.upcoming-title{
+    font-size:1.3rem;
+    font-weight:700;
+    margin-bottom:24px;
+    text-align:left;
+}
+
+.task-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 0;
+    transition:.25s;
+    border-bottom:1px solid #f1f1f1;
+}
+
+.task-row:hover{
+    background:#fafbff;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.task-row:last-child{
+    border-bottom:none;
+}
+
+.task-left{
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+}
+
+.task-dot{
+    width:10px;
+    height:10px;
+    background:#6C63FF;
+    border-radius:50%;
+    margin-top:8px;
+}
+
+.task-content h5{
+    margin:0;
+    font-size:16px;
+    font-weight:600;
+}
+
+.task-content span{
+    color:#777;
+    font-size:14px;
+}
+
+
+.status-badge{
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.progress-badge{
+    background:#FFE7D6;
+    color:#F97316;
+}
+
+.pending-badge{
+    background:#FFF4D9;
+    color:#D97706;
+}
+
+
+
+.view-all-link{
+    margin-top:20px;
+    margin-left:auto;
+    display:block;
+    border:none;
+    background:none;
+    color:#6C63FF;
+    font-weight:600;
+    cursor:pointer;
+    padding:0;
+}
+
+.view-all-link:hover{
+    color:#5848e5;
+}
+
+
+
+.chart-card{
+    background:#fff;
+    border-radius:18px;
+    padding:28px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.chart-card h3{
+    font-size:1.4rem;
+    font-weight:700;
+    margin-bottom:25px;
+}
+
+.chart-placeholder{
+    height:250px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    color:#999;
+    gap:15px;
+}
+
+.chart-placeholder p{
+    margin-top:10px;
+    font-size:15px;
+}
+
+.upcoming-card,
+.chart-card{
+    transition:all .3s ease;
+}
+
+.upcoming-card:hover,
+.chart-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 15px 35px rgba(0,0,0,.12);
+}
