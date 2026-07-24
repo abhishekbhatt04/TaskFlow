@@ -43,96 +43,79 @@ import com.nimbusds.jose.proc.SecurityContext;
 @EnableMethodSecurity
 public class JwtSecurityConfig {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, HandlerMappingIntrospector introspector) throws Exception {
-        
-        // h2-console is a servlet 
-        // https://github.com/spring-projects/spring-security/issues/12310
-        return httpSecurity
-                .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/authenticate").permitAll()
-                    .requestMatchers(PathRequest.toH2Console()).permitAll()// h2-console is a servlet and NOT recommended for a production
-                    .requestMatchers(HttpMethod.OPTIONS,"/**")
-                    .permitAll()
-                    .anyRequest()
-                    .authenticated())
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.
-                    sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer(
-                        OAuth2ResourceServerConfigurer::jwt)
-                .httpBasic(
-                        Customizer.withDefaults())
-                .headers(header -> {header.
-                    frameOptions().sameOrigin();})
-                .build();
-    }
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, HandlerMappingIntrospector introspector)
+			throws Exception {
 
-    @Bean
-    public AuthenticationManager authenticationManager(
-            UserDetailsService userDetailsService) {
-        // Before Spring Boot 4
-        // var authenticationProvider = new DaoAuthenticationProvider();
-        // authenticationProvider.setUserDetailsService(userDetailsService);
+		// h2-console is a servlet
+		// https://github.com/spring-projects/spring-security/issues/12310
+		return httpSecurity
+				.authorizeHttpRequests(auth -> auth.requestMatchers("/authenticate", "/users/signup").permitAll()
+				.requestMatchers(PathRequest.toH2Console()).permitAll()// h2-console is a servlet and NOT
+																				// recommended for a production
+						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll().anyRequest().authenticated())
+				.csrf(AbstractHttpConfigurer::disable)
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt).httpBasic(Customizer.withDefaults())
+				.headers(header -> {
+					header.frameOptions().sameOrigin();
+				}).build();
+	}
 
-        // After Spring Boot 4
-        var authenticationProvider = new DaoAuthenticationProvider(userDetailsService);
+	@Bean
+	public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
+		// Before Spring Boot 4
+		// var authenticationProvider = new DaoAuthenticationProvider();
+		// authenticationProvider.setUserDetailsService(userDetailsService);
 
-        return new ProviderManager(authenticationProvider);
-    }
+		// After Spring Boot 4
+		var authenticationProvider = new DaoAuthenticationProvider(userDetailsService);
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails user = User.withUsername("in28minutes")
-                                .password("{noop}dummy")
-                                .authorities("read")
-                                .roles("USER")
-                                .build();
+		return new ProviderManager(authenticationProvider);
+	}
 
-        return new InMemoryUserDetailsManager(user);
-    }
+	@Bean
+	public UserDetailsService userDetailsService() {
+		UserDetails user = User.withUsername("in28minutes").password("{noop}dummy").authorities("read").roles("USER")
+				.build();
 
-    @Bean
-    public JWKSource<SecurityContext> jwkSource() {
-        JWKSet jwkSet = new JWKSet(rsaKey());
-        return (((jwkSelector, securityContext) 
-                        -> jwkSelector.select(jwkSet)));
-    }
+		return new InMemoryUserDetailsManager(user);
+	}
 
-    @Bean
-    JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwkSource) {
-        return new NimbusJwtEncoder(jwkSource);
-    }
+	@Bean
+	public JWKSource<SecurityContext> jwkSource() {
+		JWKSet jwkSet = new JWKSet(rsaKey());
+		return (((jwkSelector, securityContext) -> jwkSelector.select(jwkSet)));
+	}
 
-    @Bean
-    JwtDecoder jwtDecoder() throws JOSEException {
-        return NimbusJwtDecoder
-                .withPublicKey(rsaKey().toRSAPublicKey())
-                .build();
-    }
-    
-    @Bean
-    public RSAKey rsaKey() {
-        
-        KeyPair keyPair = keyPair();
-        
-        return new RSAKey
-                .Builder((RSAPublicKey) keyPair.getPublic())
-                .privateKey((RSAPrivateKey) keyPair.getPrivate())
-                .keyID(UUID.randomUUID().toString())
-                .build();
-    }
+	@Bean
+	JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwkSource) {
+		return new NimbusJwtEncoder(jwkSource);
+	}
 
-    @Bean
-    public KeyPair keyPair() {
-        try {
-            var keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(2048);
-            return keyPairGenerator.generateKeyPair();
-        } catch (Exception e) {
-            throw new IllegalStateException(
-                    "Unable to generate an RSA Key Pair", e);
-        }
-    }
-    
+	@Bean
+	JwtDecoder jwtDecoder() throws JOSEException {
+		return NimbusJwtDecoder.withPublicKey(rsaKey().toRSAPublicKey()).build();
+	}
+
+	@Bean
+	public RSAKey rsaKey() {
+
+		KeyPair keyPair = keyPair();
+
+		return new RSAKey.Builder((RSAPublicKey) keyPair.getPublic()).privateKey((RSAPrivateKey) keyPair.getPrivate())
+				.keyID(UUID.randomUUID().toString()).build();
+	}
+
+	@Bean
+	public KeyPair keyPair() {
+		try {
+			var keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+			keyPairGenerator.initialize(2048);
+			return keyPairGenerator.generateKeyPair();
+		} catch (Exception e) {
+			throw new IllegalStateException("Unable to generate an RSA Key Pair", e);
+		}
+	}
+
 }
