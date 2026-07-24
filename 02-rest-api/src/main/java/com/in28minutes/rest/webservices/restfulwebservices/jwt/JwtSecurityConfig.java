@@ -21,17 +21,18 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
+import com.in28minutes.rest.webservices.restfulwebservices.user.CustomUserDetailsService;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -61,26 +62,28 @@ public class JwtSecurityConfig {
 					header.frameOptions().sameOrigin();
 				}).build();
 	}
-
 	@Bean
-	public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
-		// Before Spring Boot 4
-		// var authenticationProvider = new DaoAuthenticationProvider();
-		// authenticationProvider.setUserDetailsService(userDetailsService);
+	public AuthenticationManager authenticationManager(
+	        UserDetailsService userDetailsService,
+	        PasswordEncoder passwordEncoder) {
 
-		// After Spring Boot 4
-		var authenticationProvider = new DaoAuthenticationProvider(userDetailsService);
+	    DaoAuthenticationProvider authenticationProvider =
+	            new DaoAuthenticationProvider(userDetailsService);
 
-		return new ProviderManager(authenticationProvider);
+	    authenticationProvider.setPasswordEncoder(passwordEncoder);
+
+	    return new ProviderManager(authenticationProvider);
 	}
 
-	@Bean
-	public UserDetailsService userDetailsService() {
-		UserDetails user = User.withUsername("in28minutes").password("{noop}dummy").authorities("read").roles("USER")
-				.build();
-
-		return new InMemoryUserDetailsManager(user);
-	}
+//	@Bean
+//	public UserDetailsService userDetailsService() {
+//		UserDetails user = User.withUsername("in28minutes").password("{noop}dummy").authorities("read").roles("USER")
+//				.build();
+//
+//		return new InMemoryUserDetailsManager(user);
+//	}
+	
+	
 
 	@Bean
 	public JWKSource<SecurityContext> jwkSource() {
@@ -105,6 +108,11 @@ public class JwtSecurityConfig {
 
 		return new RSAKey.Builder((RSAPublicKey) keyPair.getPublic()).privateKey((RSAPrivateKey) keyPair.getPrivate())
 				.keyID(UUID.randomUUID().toString()).build();
+	}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+	    return new BCryptPasswordEncoder();
 	}
 
 	@Bean
