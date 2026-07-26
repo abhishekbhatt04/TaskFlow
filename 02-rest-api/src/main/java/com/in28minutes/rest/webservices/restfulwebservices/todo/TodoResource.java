@@ -14,39 +14,40 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TodoResource {
 
-	private TodoService todoService;
+	private TodoJpaRepository todoJpaRepository;
 
-	public TodoResource(TodoService todoService) {
-		this.todoService = todoService;
+	public TodoResource(TodoJpaRepository todoJpaRepository) {
+	    this.todoJpaRepository = todoJpaRepository;
 	}
 
 	@GetMapping("/username/{username}/todos")
 	public List<Todo> retrieveTodos(@PathVariable String username) {
-		return todoService.findByUsername(username);
+		return todoJpaRepository.findByUsername(username);
 	}
 
 	@GetMapping("/username/{username}/todos/{id}")
 	public Todo retrieveTodoUsingId(@PathVariable String username, @PathVariable int id) {
-		return todoService.findById(id);
+		return todoJpaRepository.findById(id).get();
 
 	}
 
 	@DeleteMapping("/username/{username}/todos/{id}")
 	public ResponseEntity<Void> DeleteTodoUsingId(@PathVariable String username, @PathVariable int id) {
-		todoService.deleteById(id);
+		todoJpaRepository.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping("/username/{username}/todos/{id}")
 	public Todo UpdateTodoUsingId(@PathVariable String username, @PathVariable int id, @RequestBody Todo todo) {
-		todoService.updateTodo(todo);
+		todoJpaRepository.save(todo);
 		return todo;
 	}
 
 	@PostMapping("/username/{username}/todos")
 	public Todo AddTodo(@PathVariable String username, @RequestBody Todo todo) {
-		Todo createdtodo = todoService.addTodo(username, todo.getDescription(), todo.getTargetDate(), todo.isDone());
-		return createdtodo;
+		todo.setUsername(username);
+		Todo createdTodo = todoJpaRepository.save(todo);
+		return createdTodo;
 	}
 
 }
