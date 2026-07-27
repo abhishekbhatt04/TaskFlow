@@ -99,29 +99,35 @@
     text-align:left;
 }
 
-.task-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:18px 0;
-    transition:.25s;
-    border-bottom:1px solid #f1f1f1;
+.task-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+    border-bottom: 1px solid #f1f1f1;
+    transition: 0.25s;
 }
 
-.task-row:hover{
-    background:#fafbff;
-    border-radius:10px;
-    cursor:pointer;
+.task-row:hover {
+    background: #f8f9ff;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .task-row:last-child{
     border-bottom:none;
 }
 
-.task-left{
-    display:flex;
-    align-items:flex-start;
-    gap:14px;
+.task-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+}
+
+.task-content {
+    flex: 1;
 }
 
 .task-dot{
@@ -132,10 +138,11 @@
     margin-top:8px;
 }
 
-.task-content h5{
-    margin:0;
-    font-size:16px;
-    font-weight:600;
+.task-content h5 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    word-break: break-word;
 }
 
 .task-content span{
@@ -144,11 +151,13 @@
 }
 
 
-.status-badge{
-    padding:6px 12px;
-    border-radius:20px;
-    font-size:12px;
-    font-weight:600;
+.status-badge {
+    min-width: 90px;
+    text-align: center;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
 }
 
 .progress-badge{

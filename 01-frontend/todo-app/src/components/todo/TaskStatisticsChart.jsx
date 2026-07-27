@@ -1,7 +1,11 @@
 import React from "react";
 import Chart from "react-apexcharts";
 
-export default function TaskStatisticsChart() {
+export default function TaskStatisticsChart({
+  completedTasks,
+  pendingTasks,
+  progress,
+})  {
   const options = {
     chart: {
       type: "donut",
@@ -27,7 +31,7 @@ export default function TaskStatisticsChart() {
             total: {
               show: true,
               label: "Progress",
-              formatter: () => "58%",
+              formatter: () => `${progress}%`,
             },
           },
         },
@@ -35,7 +39,7 @@ export default function TaskStatisticsChart() {
     },
   };
 
-  const series = [7, 5];
+ const series = [completedTasks, pendingTasks];
 
   return <Chart options={options} series={series} type="donut" height={280} />;
 }

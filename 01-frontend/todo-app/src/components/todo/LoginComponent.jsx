@@ -7,7 +7,7 @@ import taskAmico from "./assests/Task-amico.svg";
 import { FaClipboardCheck } from "react-icons/fa";
 export default function LoginComponent() {
   <h1>Lets start with your login!</h1>;
-  const [username, setUsername] = useState("in28minutes");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const authContext = useAuth();
@@ -134,13 +134,13 @@ export default function LoginComponent() {
                 </label>
               </div>
 
-              <a
+              {/* <a
                 href="/"
                 onClick={(e) => e.preventDefault()}
                 className="text-decoration-none forgot-link"
               >
                 Forgot Password?
-              </a>
+              </a> */}
             </div>
 
             <button className="btn btn-primary w-100" onClick={handleButton}>
