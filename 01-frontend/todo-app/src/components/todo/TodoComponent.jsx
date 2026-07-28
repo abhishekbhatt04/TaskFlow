@@ -15,6 +15,8 @@ export default function TodoComponent() {
   const { id } = useParams();
   const [description, setDescription] = useState("");
   const [targetDate, setTargetDate] = useState("");
+  const [status, setStatus] = useState("PENDING");
+
   const navigate = useNavigate();
 
   useEffect(() => retrieveTodo(), [id]);
@@ -25,31 +27,34 @@ export default function TodoComponent() {
           console.log(response);
           setDescription(response.data.description);
           setTargetDate(response.data.targetDate);
+          setStatus(response.data.status);
         })
         .catch((error) => console.log(error));
     }
   }
   function onSubmit(values) {
     console.log(values);
-    const todo = {
-      username: username,
-      description: values.description,
-      targetDate: values.targetDate,
-      done: false,
-    };
-    console.log(todo);
-
     if (id == -1) {
+      const todo = {
+        username: username,
+        description: values.description,
+        targetDate: values.targetDate,
+      };
+
       addTodoApi(username, todo)
-        .then((response) => {
-          navigate("/todos");
-        })
+        .then(() => navigate("/todos"))
         .catch((error) => console.log(error));
     } else {
+      const todo = {
+        id: Number(id), 
+        username: username,
+        description: values.description,
+        targetDate: values.targetDate,
+        status: values.status,
+      };
+
       updateTodoApi(username, id, todo)
-        .then((response) => {
-          navigate("/todos");
-        })
+        .then(() => navigate("/todos"))
         .catch((error) => console.log(error));
     }
   }
@@ -71,7 +76,11 @@ export default function TodoComponent() {
       <h1>Enter Todo Details</h1>
       <div>
         <Formik
-          initialValues={{ description, targetDate }}
+          initialValues={{
+            description,
+            targetDate,
+            status,
+          }}
           enableReinitialize={true}
           onSubmit={onSubmit}
           validate={validate}
@@ -103,6 +112,18 @@ export default function TodoComponent() {
                 <label>Target Date</label>
                 <Field className="form-control" type="date" name="targetDate" />
               </fieldset>
+
+              {id != -1 && (
+                <fieldset className="form-group">
+                  <label>Status</label>
+                  <Field as="select" className="form-control" name="status">
+                    <option value="PENDING">Pending</option>
+                    <option value="IN_PROGRESS">In Progress</option>
+                    <option value="COMPLETED">Completed</option>
+                  </Field>
+                </fieldset>
+              )}
+
               <div>
                 {" "}
                 <button className="btn btn-success m-5" type="submit" o>

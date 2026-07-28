@@ -39,6 +39,8 @@ public class TodoResource {
 
 	@PutMapping("/username/{username}/todos/{id}")
 	public Todo UpdateTodoUsingId(@PathVariable String username, @PathVariable int id, @RequestBody Todo todo) {
+		todo.setId(id);
+	    todo.setUsername(username);
 		todoJpaRepository.save(todo);
 		return todo;
 	}
@@ -46,6 +48,7 @@ public class TodoResource {
 	@PostMapping("/username/{username}/todos")
 	public Todo AddTodo(@PathVariable String username, @RequestBody Todo todo) {
 		todo.setUsername(username);
+		todo.setStatus(Status.PENDING);
 		Todo createdTodo = todoJpaRepository.save(todo);
 		return createdTodo;
 	}
