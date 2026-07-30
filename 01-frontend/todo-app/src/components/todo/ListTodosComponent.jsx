@@ -69,6 +69,7 @@ export default function ListTodosComponent() {
         <select className="toolbar-select">
           <option>All Status</option>
           <option>Pending</option>
+          <option>In Progress</option>
           <option>Completed</option>
         </select>
 
@@ -99,10 +100,16 @@ export default function ListTodosComponent() {
               <tr key={todo.id}>
                 <td>{todo.description}</td>
                 <td>
-                  {todo.done ? (
-                    <span className="status completed">Completed</span>
-                  ) : (
+                  {todo.status === "PENDING" && (
                     <span className="status pending">Pending</span>
+                  )}
+
+                  {todo.status === "IN_PROGRESS" && (
+                    <span className="status in-progress">In Progress</span>
+                  )}
+
+                  {todo.status === "COMPLETED" && (
+                    <span className="status completed">Completed</span>
                   )}
                 </td>
                 {/* <td>{todo.targetdate.toDateString()}</td> */}

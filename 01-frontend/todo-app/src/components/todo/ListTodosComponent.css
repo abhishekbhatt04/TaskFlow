@@ -70,10 +70,12 @@
 
 .status{
     display:inline-block;
-    padding:6px 14px;
+    padding:8px 16px;
     border-radius:18px;
     font-size:12px;
     font-weight:600;
+    line-height:1.4;
+    white-space:nowrap;
 }
 
 .pending{
@@ -84,4 +86,9 @@
 .completed{
     background:#DCFCE7;
     color:#15803D;
+}
+
+.in-progress{
+    background:#DBEAFE;
+    color:#1D4ED8;
 }
