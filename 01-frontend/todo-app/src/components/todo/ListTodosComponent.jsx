@@ -3,6 +3,7 @@ import { deleteTodoApi, retrieveTodosForUser } from "./api/TodosApiService";
 import { useAuth } from "./security/AuthContext";
 import { useNavigate } from "react-router-dom";
 import "./ListTodosComponent.css";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 export default function ListTodosComponent() {
   // const today =new Date()
@@ -74,7 +75,7 @@ export default function ListTodosComponent() {
         </select>
 
         <select className="toolbar-select">
-          <option>Sort by: Target Date</option>
+          <option>Sort by Date</option>
           <option>Task Name</option>
           <option>Status</option>
         </select>
@@ -122,18 +123,19 @@ export default function ListTodosComponent() {
                 </td>
                 <td>
                   <button
-                    className="btn btn-warning"
+                    className="delete-btn"
                     onClick={() => deleteTodo(todo.id)}
                   >
-                    Delete
+                    <FaTrash size={14} />  Delete
                   </button>
                 </td>
+
                 <td>
                   <button
-                    className="btn btn-success"
+                    className="edit-btn"
                     onClick={() => updateTodo(todo.id)}
                   >
-                    Update
+                    <FaEdit size={14} />  Edit
                   </button>
                 </td>
               </tr>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { retrieveHelloWorldPathVar } from "./api/HelloWorldApiService";
 import "./WelcomeComponent.css";
 import "./TaskStatisticsChart";
@@ -21,6 +21,8 @@ export default function WelcomeComponent() {
   const authContext = useAuth();
   const username = authContext.username;
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     retrieveTodos();
   }, []);
@@ -37,12 +39,15 @@ export default function WelcomeComponent() {
 
   const totalTasks = todos.length;
 
-  const completedTasks = todos.filter((todo) => todo.done).length;
+  const pendingTasks = todos.filter((todo) => todo.status === "PENDING").length;
 
-  const pendingTasks = totalTasks - completedTasks;
+  const inProgressTasks = todos.filter(
+    (todo) => todo.status === "IN_PROGRESS",
+  ).length;
 
-  const progress =
-    totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
+  const completedTasks = todos.filter(
+    (todo) => todo.status === "COMPLETED",
+  ).length;
 
   function callHelloWorld() {
     retrieveHelloWorldPathVar("Abhishek", authContext.token)
@@ -60,8 +65,14 @@ export default function WelcomeComponent() {
     console.log(error);
   }
 
+  function viewAllTasks() {
+    navigate("/todos");
+  }
+
   const upcomingTodos = [...todos]
-    .filter((todo) => !todo.done)
+    .filter(
+      (todo) => todo.status === "PENDING" || todo.status === "IN_PROGRESS",
+    )
     .sort((a, b) => new Date(a.targetDate) - new Date(b.targetDate))
     .slice(0, 3);
 
@@ -95,8 +106,8 @@ export default function WelcomeComponent() {
 
         <div className="stat-card">
           <LuChartColumn className="stat-icon progress-icon" />
-          <h2>{progress}%</h2>
-          <span>Progress</span>
+          <h2>{inProgressTasks}</h2>
+          <p>In Progress</p>
         </div>
       </div>
 
@@ -122,12 +133,26 @@ export default function WelcomeComponent() {
                   </div>
                 </div>
 
-                <span className="status-badge pending-badge">Pending</span>
+                {todo.status === "PENDING" && (
+                  <span className="status-badge pending-badge">Pending</span>
+                )}
+
+                {todo.status === "IN_PROGRESS" && (
+                  <span className="status-badge progress-badge">
+                    In Progress
+                  </span>
+                )}
               </div>
             ))
           )}
 
-          <button className="view-all-link">View all tasks →</button>
+          <button
+            className="view-all-link"
+            onClick={() => navigate("/todos")}
+            style={{ cursor: "pointer" }}
+          >
+            View all tasks →
+          </button>
         </div>
 
         {/* Chart Card */}
@@ -138,7 +163,7 @@ export default function WelcomeComponent() {
             <TaskStatisticsChart
               completedTasks={completedTasks}
               pendingTasks={pendingTasks}
-              progress={progress}
+              inProgressTasks={inProgressTasks}
             />
           </div>
         </div>

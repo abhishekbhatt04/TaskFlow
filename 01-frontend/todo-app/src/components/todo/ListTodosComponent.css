@@ -1,94 +1,189 @@
-.tasks-page{
+    .tasks-page{
     padding:40px;
+    background:#F8FAFC;
+    min-height:100vh;
 }
 
-.tasks-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    margin-bottom:25px;
-}
+    .tasks-header{
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+        margin-bottom:25px;
+    }
 
-.tasks-header h1{
-    font-size:2rem;
+   .tasks-header h1{
+    font-size:2.4rem;
     font-weight:700;
+    color:#1F2937;
     margin:0;
 }
 
 .tasks-header p{
-    margin-top:6px;
-    color:#777;
+    margin-top:8px;
+    color:#6B7280;
+    font-size:17px;
 }
 
-.add-task-btn{
-    background:#6C63FF;
-    color:white;
-    border:none;
-    padding:12px 22px;
-    border-radius:12px;
-    font-weight:600;
-    cursor:pointer;
-    transition:.3s;
-}
+    .add-task-btn{
+        background:#6C63FF;
+        color:white;
+        border:none;
+        padding:12px 22px;
+        border-radius:12px;
+        font-weight:600;
+        cursor:pointer;
+        transition:.3s;
+    }
 
-.add-task-btn:hover{
-    background:#5848e5;
-}
+    .add-task-btn:hover{
+        background:#5848e5;
+    }
 
-.task-toolbar{
+   .task-toolbar{
     display:flex;
     align-items:center;
-    gap:15px;
-    margin-bottom:25px;
+    gap:18px;
+    background:white;
+    padding:20px;
+    border-radius:20px;
+    box-shadow:0 8px 30px rgba(15,23,42,.08);
+    margin-bottom:30px;
 }
 
-.search-input{
+   .search-input{
     flex:1;
-    padding:14px 18px;
-    border:1px solid #ddd;
-    border-radius:12px;
-    outline:none;
-    font-size:15px;
+    height:58px;
+    padding:0 22px;
+    border:1px solid #E5E7EB;
+    border-radius:16px;
+    font-size:16px;
+    background:#FAFBFC;
+    transition:.25s;
 }
 
-.toolbar-select{
-    width:180px;
-    padding:14px;
-    border:1px solid #ddd;
-    border-radius:12px;
-    background:#fff;
+.search-input:hover{
+    border-color:#C7D2FE;
+}
+
+.search-input:focus{
+    background:white;
+    border-color:#6C63FF;
+    box-shadow:0 0 0 5px rgba(108,99,255,.12);
+}
+
+  .toolbar-select{
+    min-width:210px;
+    height:58px;
+    padding:0 18px;
+    border:1px solid #E5E7EB;
+    border-radius:16px;
+    background:#FAFBFC;
+    font-size:15px;
+    transition:.25s;
+}
+
+.toolbar-select:hover{
+    border-color:#C7D2FE;
+}
+
+.toolbar-select:focus{
     outline:none;
-    cursor:pointer;
+    background:white;
+    border-color:#6C63FF;
+    box-shadow:0 0 0 5px rgba(108,99,255,.12);
 }
 
 .table-card{
     background:white;
-    border-radius:18px;
-    padding:25px;
-    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    border-radius:22px;
+    padding:28px;
+    box-shadow:0 12px 35px rgba(15,23,42,.08);
 }
 
-.status{
-    display:inline-block;
-    padding:8px 16px;
-    border-radius:18px;
-    font-size:12px;
+    .status{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:120px;
+    padding:8px 18px;
+    border-radius:30px;
+    font-size:13px;
     font-weight:600;
-    line-height:1.4;
-    white-space:nowrap;
 }
 
 .pending{
-    background:#FFF4D9;
+    background:#FFF7E6;
     color:#D97706;
 }
 
-.completed{
-    background:#DCFCE7;
-    color:#15803D;
+.in-progress{
+    background:#E8F1FF;
+    color:#2563EB;
 }
 
-.in-progress{
-    background:#DBEAFE;
-    color:#1D4ED8;
+.completed{
+    background:#EAFBF2;
+    color:#16A34A;
+}
+
+.edit-btn,
+.delete-btn{
+    border:none;
+    padding:8px 16px;
+    border-radius:10px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all .25s ease;
+}
+
+.edit-btn{
+    background:#EEF2FF;
+    color:#4F46E5;
+}
+
+.edit-btn:hover{
+    background:#4F46E5;
+    color:white;
+    transform:translateY(-2px);
+}
+
+.delete-btn{
+    background:#FEE2E2;
+    color:#DC2626;
+}
+
+.delete-btn:hover{
+    background:#DC2626;
+    color:white;
+    transform:translateY(-2px);
+}
+
+.table{
+    border-collapse:separate;
+    border-spacing:0 12px;
+}
+
+.table thead th{
+    border:none;
+    color:#6B7280;
+    font-size:15px;
+    font-weight:600;
+    padding-bottom:18px;
+}
+
+.table tbody tr{
+    background:white;
+    transition:.25s;
+}
+
+.table tbody tr:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(0,0,0,.05);
+}
+
+.table tbody td{
+    vertical-align:middle;
+    padding:18px 16px;
+    border-top:none;
 }

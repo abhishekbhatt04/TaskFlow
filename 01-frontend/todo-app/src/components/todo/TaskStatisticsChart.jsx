@@ -5,13 +5,14 @@ export default function TaskStatisticsChart({
   completedTasks,
   pendingTasks,
   progress,
-})  {
+  inProgressTasks,
+}) {
   const options = {
     chart: {
       type: "donut",
     },
-    labels: ["Completed", "Pending"],
-    colors: ["#22C55E", "#F59E0B"],
+    labels: ["Pending", "In Progress", "Completed"],
+    colors: ["#F59E0B", "#3B82F6", "#22C55E"],
     legend: {
       position: "bottom",
       fontSize: "14px",
@@ -30,8 +31,8 @@ export default function TaskStatisticsChart({
             show: true,
             total: {
               show: true,
-              label: "Progress",
-              formatter: () => `${progress}%`,
+              label: "Total",
+              formatter: () => pendingTasks + inProgressTasks + completedTasks,
             },
           },
         },
@@ -39,7 +40,7 @@ export default function TaskStatisticsChart({
     },
   };
 
- const series = [completedTasks, pendingTasks];
+  const series = [pendingTasks, inProgressTasks, completedTasks];
 
   return <Chart options={options} series={series} type="donut" height={280} />;
 }
