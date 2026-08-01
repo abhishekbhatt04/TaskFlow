@@ -11,3 +11,7 @@ export const executeBasicAuthService
 
 export const executeJwtAuthService
                           =(username,password)=>apiCLient.post(`/authenticate`,{username,password})
+
+
+export const registerApi = (user) =>
+                       apiCLient.post("/register", user);

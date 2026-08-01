@@ -95,4 +95,15 @@
     font-size:2rem;
     color:white;
 }
+
+.auth-link{
+    color:#6C63FF;
+    font-weight:600;
+    transition:.2s;
+}
+
+.auth-link:hover{
+    color:#5848e5;
+    text-decoration:underline !important;
+}
     

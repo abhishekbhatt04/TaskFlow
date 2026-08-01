@@ -13,7 +13,7 @@ export default function HeaderComponent() {
   const location = useLocation();
 
   const hideHeader =
-    location.pathname === "/" || location.pathname === "/login";
+    location.pathname === "/" || location.pathname === "/login"||location.pathname === "/signup";
 
   if (hideHeader) {
     return null;

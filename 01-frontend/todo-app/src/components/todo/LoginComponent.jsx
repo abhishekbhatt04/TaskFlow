@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./LoginComponent.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "./security/AuthContext";
 import { FaUser, FaLock } from "react-icons/fa";
 import taskAmico from "./assests/Task-amico.svg";
@@ -121,31 +121,21 @@ export default function LoginComponent() {
               </div>
             </div>
 
-            <div className="d-flex justify-content-between align-items-center mb-5">
-              <div className="form-check d-flex align-items-center">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id="remember"
-                />
 
-                <label className="form-check-label ms-2" htmlFor="remember">
-                  Remember me
-                </label>
-              </div>
-
-              {/* <a
-                href="/"
-                onClick={(e) => e.preventDefault()}
-                className="text-decoration-none forgot-link"
-              >
-                Forgot Password?
-              </a> */}
-            </div>
-
-            <button className="btn btn-primary w-100" onClick={handleButton}>
+            <button className="btn btn-primary w-100 mt-3" onClick={handleButton}>
               Sign In →
             </button>
+
+            <div className="text-center mt-4">
+              <span className="text-muted">Don't have an account?</span>
+
+              <Link
+                to="/signup"
+                className="text-decoration-none ms-2 fw-semibold"
+              >
+                Create Account
+              </Link>
+            </div>
 
             {showError && (
               <div className="alert alert-danger mt-3">
