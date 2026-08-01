@@ -13,6 +13,9 @@ export default function ListTodosComponent() {
   const authContext = useAuth();
   const username = authContext.username;
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("ALL");
+  const [sortBy, setSortBy] = useState("DATE");
 
   // const todos=[
   //         //    {id:1,description:'Learn AWS' ,done:false,targetdate:targetdate},
@@ -49,6 +52,43 @@ export default function ListTodosComponent() {
     navigate("/todo/-1");
   }
 
+  let filteredTodos = todos.filter(todo =>
+    todo.description
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+);
+
+if (statusFilter !== "ALL") {
+    filteredTodos = filteredTodos.filter(
+        todo => todo.status === statusFilter
+    );
+}
+
+if (sortBy === "DATE") {
+    filteredTodos.sort(
+        (a, b) => new Date(a.targetDate) - new Date(b.targetDate)
+    );
+}
+
+if (sortBy === "A_Z") {
+    filteredTodos.sort(
+        (a, b) => a.description.localeCompare(b.description)
+    );
+}
+
+if (sortBy === "STATUS") {
+
+    const statusOrder = {
+        PENDING: 1,
+        IN_PROGRESS: 2,
+        COMPLETED: 3
+    };
+
+    filteredTodos.sort(
+        (a, b) => statusOrder[a.status] - statusOrder[b.status]
+    );
+}
+
   return (
     <div className="tasks-page">
       <div className="tasks-header">
@@ -62,22 +102,32 @@ export default function ListTodosComponent() {
 
       <div className="task-toolbar">
         <input
-          className="search-input"
           type="text"
+          className="search-input"
           placeholder="🔍 Search tasks..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
 
-        <select className="toolbar-select">
-          <option>All Status</option>
-          <option>Pending</option>
-          <option>In Progress</option>
-          <option>Completed</option>
+        <select
+          className="toolbar-select"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="ALL">All Status</option>
+          <option value="PENDING">Pending</option>
+          <option value="IN_PROGRESS">In Progress</option>
+          <option value="COMPLETED">Completed</option>
         </select>
 
-        <select className="toolbar-select">
-          <option>Sort by Date</option>
-          <option>Task Name</option>
-          <option>Status</option>
+        <select
+          className="toolbar-select"
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+        >
+          <option value="DATE">Target Date</option>
+          <option value="A_Z">A - Z</option>
+          <option value="STATUS">Status</option>
         </select>
 
         <button className="add-task-btn" onClick={addNewTodo}>
@@ -97,7 +147,7 @@ export default function ListTodosComponent() {
             </tr>
           </thead>
           <tbody>
-            {todos.map((todo) => (
+            {filteredTodos.map((todo) => (
               <tr key={todo.id}>
                 <td>{todo.description}</td>
                 <td>
@@ -126,7 +176,7 @@ export default function ListTodosComponent() {
                     className="delete-btn"
                     onClick={() => deleteTodo(todo.id)}
                   >
-                    <FaTrash size={14} />  Delete
+                    <FaTrash size={14} /> Delete
                   </button>
                 </td>
 
@@ -135,7 +185,7 @@ export default function ListTodosComponent() {
                     className="edit-btn"
                     onClick={() => updateTodo(todo.id)}
                   >
-                    <FaEdit size={14} />  Edit
+                    <FaEdit size={14} /> Edit
                   </button>
                 </td>
               </tr>
