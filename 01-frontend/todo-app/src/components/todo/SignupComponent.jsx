@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./LoginComponent.css";
 import { Link, useNavigate } from "react-router-dom";
 import { registerApi } from "./api/AuthenticationApiService";
@@ -10,44 +10,70 @@ export default function SignupComponent() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({});
   const navigate = useNavigate();
 
+  // Auto-dismiss message after 4 seconds
+  useEffect(() => {
+    if (!message) return;
+    const timer = setTimeout(() => setMessage(null), 4000);
+    return () => clearTimeout(timer);
+  }, [message]);
+
+  function showMessage(text, type = "error") {
+    setMessage({ text, type });
+  }
+
+  function clearFieldError(field) {
+    setFieldErrors((prev) => ({ ...prev, [field]: "" }));
+  }
+
+  function validateFields() {
+    const errors = {};
+    if (!username.trim()) {
+      errors.username = "Username is required";
+    } else if (username.trim().length < 3) {
+      errors.username = "Username must be at least 3 characters";
+    }
+    if (!password.trim()) {
+      errors.password = "Password is required";
+    } else if (password.length < 6) {
+      errors.password = "Password must be at least 6 characters";
+    }
+    if (!confirmPassword.trim()) {
+      errors.confirmPassword = "Please confirm your password";
+    } else if (password !== confirmPassword) {
+      errors.confirmPassword = "Passwords do not match";
+    }
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  }
+
   function register() {
-    if (username.trim() === "") {
-      alert("Username is required");
-      return;
-    }
+    if (!validateFields()) return;
 
-    if (password.trim() === "") {
-      alert("Password is required");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-
-    const user = {
-      username,
-      password,
-    };
+    const user = { username, password };
 
     registerApi(user)
-      .then(() => {
-        alert("Account created successfully");
-        navigate("/login");
+      .then((response) => {
+        if (response.data === "Username already exists") {
+          showMessage("Username already taken. Please choose a different one.");
+          return;
+        }
+        showMessage("Account created successfully! Redirecting...", "success");
+        setTimeout(() => navigate("/login"), 1500);
       })
       .catch((error) => {
         console.log(error);
-
         if (error.response?.status === 400) {
-          alert(error.response.data);
+          showMessage(error.response.data);
         } else {
-          alert("Registration failed");
+          showMessage("Registration failed. Please try again.");
         }
       });
   }
+
 
   return (
     <div className="container-fluid login-page">
@@ -79,8 +105,40 @@ export default function SignupComponent() {
 
             <p className="text-muted mb-4">Create your TaskFlow account</p>
 
-            {/* Username */}
+            {/* Inline Message Banner */}
+            {message && (
+              <div
+                style={{
+                  padding: "12px 16px",
+                  borderRadius: "10px",
+                  marginBottom: "16px",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  animation: "fadeSlideIn 0.3s ease",
+                  ...(message.type === "success"
+                    ? {
+                        background: "#ecfdf5",
+                        color: "#065f46",
+                        border: "1px solid #6ee7b7",
+                      }
+                    : {
+                        background: "#fff1f2",
+                        color: "#9f1239",
+                        border: "1px solid #fda4af",
+                      }),
+                }}
+              >
+                <span style={{ fontSize: "16px" }}>
+                  {message.type === "success" ? "✅" : "⚠️"}
+                </span>
+                {message.text}
+              </div>
+            )}
 
+            {/* Username */}
             <div className="mb-3">
               <label className="form-label fw-semibold">Username</label>
 
@@ -91,16 +149,18 @@ export default function SignupComponent() {
 
                 <input
                   type="text"
-                  className="form-control"
-                  placeholder="Enter username"
+                  className={`form-control ${fieldErrors.username ? "is-invalid-field" : ""}`}
+                  placeholder="Enter username (min. 3 chars)"
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  onChange={(e) => { setUsername(e.target.value); clearFieldError("username"); }}
                 />
               </div>
+              {fieldErrors.username && (
+                <span className="field-error">{fieldErrors.username}</span>
+              )}
             </div>
 
             {/* Password */}
-
             <div className="mb-3">
               <label className="form-label fw-semibold">Password</label>
 
@@ -111,16 +171,18 @@ export default function SignupComponent() {
 
                 <input
                   type="password"
-                  className="form-control"
-                  placeholder="Enter password"
+                  className={`form-control ${fieldErrors.password ? "is-invalid-field" : ""}`}
+                  placeholder="Enter password (min. 6 chars)"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => { setPassword(e.target.value); clearFieldError("password"); }}
                 />
               </div>
+              {fieldErrors.password && (
+                <span className="field-error">{fieldErrors.password}</span>
+              )}
             </div>
 
             {/* Confirm Password */}
-
             <div className="mb-4">
               <label className="form-label fw-semibold">Confirm Password</label>
 
@@ -131,12 +193,15 @@ export default function SignupComponent() {
 
                 <input
                   type="password"
-                  className="form-control"
+                  className={`form-control ${fieldErrors.confirmPassword ? "is-invalid-field" : ""}`}
                   placeholder="Confirm password"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={(e) => { setConfirmPassword(e.target.value); clearFieldError("confirmPassword"); }}
                 />
               </div>
+              {fieldErrors.confirmPassword && (
+                <span className="field-error">{fieldErrors.confirmPassword}</span>
+              )}
             </div>
 
             <button className="btn btn-primary w-100" onClick={register}>

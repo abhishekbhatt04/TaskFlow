@@ -3,13 +3,12 @@ import { deleteTodoApi, retrieveTodosForUser } from "./api/TodosApiService";
 import { useAuth } from "./security/AuthContext";
 import { useNavigate } from "react-router-dom";
 import "./ListTodosComponent.css";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaExclamationTriangle, FaClipboardList } from "react-icons/fa";
 
 export default function ListTodosComponent() {
-  // const today =new Date()
-  // const targetdate=new Date(today.getFullYear()+10,today.getMonth(),today.getDate())
   const [todos, setTodos] = useState([]);
   const [message, setMessage] = useState(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null); // id of todo pending deletion
   const authContext = useAuth();
   const username = authContext.username;
   const navigate = useNavigate();
@@ -37,10 +36,15 @@ export default function ListTodosComponent() {
   }
 
   function deleteTodo(id) {
-    console.log("clicked" + id);
-    deleteTodoApi(username, id).then(() => {
-      setMessage(`delete of todo with id= ${id} is successful`);
+    setConfirmDeleteId(id); // open confirm modal
+  }
+
+  function confirmDelete() {
+    deleteTodoApi(username, confirmDeleteId).then(() => {
+      setMessage(`Todo deleted successfully.`);
+      setConfirmDeleteId(null);
       refreshTodos();
+      setTimeout(() => setMessage(null), 3500);
     });
   }
   function updateTodo(id) {
@@ -135,64 +139,97 @@ if (sortBy === "STATUS") {
         </button>
       </div>
 
-      <div className="table-card">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Task</th>
-              <th>Status</th>
-              <th>Due Date</th>
-              <th>Delete</th>
-              <th>Edit</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredTodos.map((todo) => (
-              <tr key={todo.id}>
-                <td>{todo.description}</td>
-                <td>
-                  {todo.status === "PENDING" && (
-                    <span className="status pending">Pending</span>
-                  )}
-
-                  {todo.status === "IN_PROGRESS" && (
-                    <span className="status in-progress">In Progress</span>
-                  )}
-
-                  {todo.status === "COMPLETED" && (
-                    <span className="status completed">Completed</span>
-                  )}
-                </td>
-                {/* <td>{todo.targetdate.toDateString()}</td> */}
-                <td>
-                  {new Date(todo.targetDate).toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })}
-                </td>
-                <td>
-                  <button
-                    className="delete-btn"
-                    onClick={() => deleteTodo(todo.id)}
-                  >
-                    <FaTrash size={14} /> Delete
-                  </button>
-                </td>
-
-                <td>
-                  <button
-                    className="edit-btn"
-                    onClick={() => updateTodo(todo.id)}
-                  >
-                    <FaEdit size={14} /> Edit
-                  </button>
-                </td>
+      {todos.length === 0 ? (
+        <div className="empty-state">
+          <div className="empty-icon">
+            <FaClipboardList size={40} />
+          </div>
+          <h2>No tasks yet</h2>
+          <p>Looks like you haven't created any tasks. Start by adding your first one!</p>
+          <button className="add-task-btn" onClick={addNewTodo}>
+            + Create your first task
+          </button>
+        </div>
+      ) : (
+        <div className="table-card">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Status</th>
+                <th>Due Date</th>
+                <th>Delete</th>
+                <th>Edit</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {filteredTodos.map((todo) => (
+                <tr key={todo.id}>
+                  <td>{todo.description}</td>
+                  <td>
+                    {todo.status === "PENDING" && (
+                      <span className="status pending">Pending</span>
+                    )}
+
+                    {todo.status === "IN_PROGRESS" && (
+                      <span className="status in-progress">In Progress</span>
+                    )}
+
+                    {todo.status === "COMPLETED" && (
+                      <span className="status completed">Completed</span>
+                    )}
+                  </td>
+                  <td>
+                    {new Date(todo.targetDate).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </td>
+                  <td>
+                    <button
+                      className="delete-btn"
+                      onClick={() => deleteTodo(todo.id)}
+                    >
+                      <FaTrash size={14} /> Delete
+                    </button>
+                  </td>
+
+                  <td>
+                    <button
+                      className="edit-btn"
+                      onClick={() => updateTodo(todo.id)}
+                    >
+                      <FaEdit size={14} /> Edit
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* ── Confirm Delete Modal ── */}
+      {confirmDeleteId !== null && (
+        <div className="confirm-overlay" onClick={() => setConfirmDeleteId(null)}>
+          <div className="confirm-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="confirm-icon">
+              <FaExclamationTriangle size={28} />
+            </div>
+            <h3>Delete Task?</h3>
+            <p>This action cannot be undone. Are you sure you want to delete this task?</p>
+            <div className="confirm-actions">
+              <button className="confirm-cancel-btn" onClick={() => setConfirmDeleteId(null)}>
+                Cancel
+              </button>
+              <button className="confirm-delete-btn" onClick={confirmDelete}>
+                <FaTrash size={13} /> Yes, Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

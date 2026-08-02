@@ -106,4 +106,28 @@
     color:#5848e5;
     text-decoration:underline !important;
 }
-    
+
+/* ── Shared field-level validation styles ── */
+.field-error {
+    display: block;
+    font-size: 12.5px;
+    color: #DC2626;
+    font-weight: 500;
+    margin-top: 5px;
+    padding-left: 2px;
+}
+
+.is-invalid-field {
+    border-color: #F87171 !important;
+    background: #fff8f8 !important;
+}
+
+.is-invalid-field:focus {
+    border-color: #EF4444 !important;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1) !important;
+}
+
+@keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
