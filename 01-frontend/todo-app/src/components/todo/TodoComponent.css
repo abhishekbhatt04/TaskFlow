@@ -20,16 +20,16 @@
 /* Header strip */
 .todo-form-header {
     background: linear-gradient(135deg, #6C63FF, #4F46E5);
-    padding: 32px 36px;
+    padding: 28px 32px;
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 16px;
     color: white;
 }
 
 .todo-form-icon {
-    width: 54px;
-    height: 54px;
+    width: 50px;
+    height: 50px;
     background: rgba(255, 255, 255, 0.2);
     border-radius: 14px;
     display: flex;
@@ -39,14 +39,14 @@
 }
 
 .todo-form-title {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 700;
     margin: 0;
     color: white;
 }
 
 .todo-form-subtitle {
-    font-size: 14px;
+    font-size: 13px;
     margin: 4px 0 0;
     opacity: 0.85;
     color: white;
@@ -54,10 +54,10 @@
 
 /* Form body */
 .todo-form-body {
-    padding: 36px;
+    padding: 32px;
     display: flex;
     flex-direction: column;
-    gap: 22px;
+    gap: 20px;
 }
 
 .todo-field-group {
@@ -75,7 +75,7 @@
 }
 
 .todo-field-input {
-    height: 52px;
+    height: 50px;
     padding: 0 16px;
     border: 1.5px solid #E5E7EB;
     border-radius: 12px;
@@ -86,6 +86,7 @@
     width: 100%;
     outline: none;
     appearance: none;
+    box-sizing: border-box;
 }
 
 .todo-field-input:focus {
@@ -153,4 +154,50 @@
     opacity: 0.9;
     transform: translateY(-1px);
     box-shadow: 0 8px 20px rgba(108, 99, 255, 0.35);
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+    .todo-page {
+        padding: 20px 12px;
+        align-items: flex-start;
+    }
+
+    .todo-form-card {
+        border-radius: 18px;
+        width: 100%;
+    }
+
+    .todo-form-header {
+        padding: 20px;
+        gap: 12px;
+    }
+
+    .todo-form-icon {
+        width: 42px;
+        height: 42px;
+    }
+
+    .todo-form-title {
+        font-size: 1.15rem;
+    }
+
+    .todo-form-subtitle {
+        font-size: 12px;
+    }
+
+    .todo-form-body {
+        padding: 20px;
+        gap: 16px;
+    }
+
+    .todo-form-actions {
+        flex-direction: column;
+    }
+
+    .todo-cancel-btn,
+    .todo-save-btn {
+        width: 100%;
+        flex: none;
+    }
 }

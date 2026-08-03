@@ -151,64 +151,80 @@ if (sortBy === "STATUS") {
           </button>
         </div>
       ) : (
-        <div className="table-card">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Task</th>
-                <th>Status</th>
-                <th>Due Date</th>
-                <th>Delete</th>
-                <th>Edit</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredTodos.map((todo) => (
-                <tr key={todo.id}>
-                  <td>{todo.description}</td>
-                  <td>
-                    {todo.status === "PENDING" && (
-                      <span className="status pending">Pending</span>
-                    )}
+        <>
+          {/* Desktop Table — hidden on mobile via CSS */}
+          <div className="table-card desktop-table">
+            <div className="table-responsive">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Task</th>
+                    <th>Status</th>
+                    <th>Due Date</th>
+                    <th>Delete</th>
+                    <th>Edit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredTodos.map((todo) => (
+                    <tr key={todo.id}>
+                      <td>{todo.description}</td>
+                      <td>
+                        {todo.status === "PENDING" && <span className="status pending">Pending</span>}
+                        {todo.status === "IN_PROGRESS" && <span className="status in-progress">In Progress</span>}
+                        {todo.status === "COMPLETED" && <span className="status completed">Completed</span>}
+                      </td>
+                      <td>
+                        {new Date(todo.targetDate).toLocaleDateString("en-GB", {
+                          day: "2-digit", month: "short", year: "numeric",
+                        })}
+                      </td>
+                      <td>
+                        <button className="delete-btn" onClick={() => deleteTodo(todo.id)}>
+                          <FaTrash size={14} /> Delete
+                        </button>
+                      </td>
+                      <td>
+                        <button className="edit-btn" onClick={() => updateTodo(todo.id)}>
+                          <FaEdit size={14} /> Edit
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-                    {todo.status === "IN_PROGRESS" && (
-                      <span className="status in-progress">In Progress</span>
-                    )}
-
-                    {todo.status === "COMPLETED" && (
-                      <span className="status completed">Completed</span>
-                    )}
-                  </td>
-                  <td>
+          {/* Mobile Cards — hidden on desktop via CSS */}
+          <div className="mobile-cards">
+            {filteredTodos.map((todo) => (
+              <div key={todo.id} className="todo-mobile-card">
+                <p className="todo-mobile-task">{todo.description}</p>
+                <div className="todo-mobile-meta">
+                  {todo.status === "PENDING" && <span className="status pending">Pending</span>}
+                  {todo.status === "IN_PROGRESS" && <span className="status in-progress">In Progress</span>}
+                  {todo.status === "COMPLETED" && <span className="status completed">Completed</span>}
+                  <span className="todo-mobile-date">
                     {new Date(todo.targetDate).toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
+                      day: "2-digit", month: "short", year: "numeric",
                     })}
-                  </td>
-                  <td>
-                    <button
-                      className="delete-btn"
-                      onClick={() => deleteTodo(todo.id)}
-                    >
-                      <FaTrash size={14} /> Delete
-                    </button>
-                  </td>
-
-                  <td>
-                    <button
-                      className="edit-btn"
-                      onClick={() => updateTodo(todo.id)}
-                    >
-                      <FaEdit size={14} /> Edit
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                  </span>
+                </div>
+                <div className="todo-mobile-actions">
+                  <button className="delete-btn" onClick={() => deleteTodo(todo.id)}>
+                    <FaTrash size={13} /> Delete
+                  </button>
+                  <button className="edit-btn" onClick={() => updateTodo(todo.id)}>
+                    <FaEdit size={13} /> Edit
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
+
 
       {/* ── Confirm Delete Modal ── */}
       {confirmDeleteId !== null && (

@@ -1,92 +1,96 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "./security/AuthContext";
-import { useLocation } from "react-router-dom";
 import "./HeaderComponent.css";
-import { FaClipboardCheck } from "react-icons/fa";
-export default function HeaderComponent() {
-  // const authContext= useContext(AuthContext) using its easier version below
+import { FaClipboardCheck, FaBars, FaTimes } from "react-icons/fa";
 
+export default function HeaderComponent() {
   const authContext = useAuth();
   const isAuthenticated = authContext.isAuthenticated;
   const logout = authContext.logout;
-  // console.log(authContext)
   const location = useLocation();
+  const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const hideHeader =
-    location.pathname === "/" || location.pathname === "/login"||location.pathname === "/signup";
+    location.pathname === "/" ||
+    location.pathname === "/login" ||
+    location.pathname === "/signup";
 
-  if (hideHeader) {
-    return null;
+  if (hideHeader) return null;
+
+  function handleLinkClick() {
+    setMenuOpen(false);
+  }
+
+  function handleLogout() {
+    logout();
+    setMenuOpen(false);
+    navigate("/logout");
   }
 
   return (
     <header className="taskflow-header">
-      <div className="container">
-        <div className="row">
-          <nav className="navbar navbar-expand-lg taskflow-navbar">
-            <div className="container-fluid">
-            
-              <Link
-                className="navbar-brand taskflow-logo"
-                to="/welcome/in28minutes"
-              >
-                <FaClipboardCheck className="me-2" />TaskFlow
-              </Link>
-              
-              <button
-                className="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarNav"
-              >
-                <span className="navbar-toggler-icon"></span>
-              </button>
-              <div className="collapse navbar-collapse" id="navbarNav">
-                <ul className="navbar-nav mx-auto">
-                  {isAuthenticated && (
-                    <li className="nav-item">
-                      <Link
-                        className="nav-link taskflow-link"
-                        to="/welcome/in28minutes"
-                      >
-                        Dashboard
-                      </Link>
-                    </li>
-                  )}
+      <div className="taskflow-nav-inner">
+        {/* Logo */}
+        <Link
+          className="taskflow-logo"
+          to={`/welcome/${authContext.username}`}
+          onClick={handleLinkClick}
+        >
+          <FaClipboardCheck />
+          TaskFlow
+        </Link>
 
-                  {isAuthenticated && (
-                    <li className="nav-item">
-                      <Link className="nav-link taskflow-link" to="/todos">
-                        My Tasks
-                      </Link>
-                    </li>
-                  )}
-                </ul>
+        {/* Hamburger button — React-controlled */}
+        <button
+          className="nav-hamburger"
+          onClick={() => setMenuOpen((prev) => !prev)}
+          aria-label="Toggle navigation"
+        >
+          {menuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+        </button>
 
-                <ul className="navbar-nav">
-                  {!isAuthenticated && (
-                    <li className="nav-item">
-                      <Link className="nav-link taskflow-link" to="/login">
-                        Login
-                      </Link>
-                    </li>
-                  )}
+        {/* Center nav links */}
+        <div className={`nav-center ${menuOpen ? "nav-open" : ""}`}>
+          {isAuthenticated && (
+            <Link
+              className="taskflow-link"
+              to={`/welcome/${authContext.username}`}
+              onClick={handleLinkClick}
+            >
+              Dashboard
+            </Link>
+          )}
 
-                  {isAuthenticated && (
-                    <li className="nav-item">
-                      <Link
-                        className="logout-btn"
-                        to="/logout"
-                        onClick={logout}
-                      >
-                        Logout
-                      </Link>
-                    </li>
-                  )}
-                </ul>
-              </div>
-            </div>
-          </nav>
+          {isAuthenticated && (
+            <Link
+              className="taskflow-link"
+              to="/todos"
+              onClick={handleLinkClick}
+            >
+              My Tasks
+            </Link>
+          )}
+
+          {!isAuthenticated && (
+            <Link
+              className="taskflow-link"
+              to="/login"
+              onClick={handleLinkClick}
+            >
+              Login
+            </Link>
+          )}
+        </div>
+
+        {/* Right: logout */}
+        <div className={`nav-actions ${menuOpen ? "nav-open" : ""}`}>
+          {isAuthenticated && (
+            <button className="logout-btn" onClick={handleLogout}>
+              Logout
+            </button>
+          )}
         </div>
       </div>
     </header>

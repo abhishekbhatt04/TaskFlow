@@ -42,5 +42,6 @@ export default function TaskStatisticsChart({
 
   const series = [pendingTasks, inProgressTasks, completedTasks];
 
-  return <Chart options={options} series={series} type="donut" height={280} />;
+  return <Chart options={options} series={series} type="donut" height={260} width="100%" />;
+
 }
